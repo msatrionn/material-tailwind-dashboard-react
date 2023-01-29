@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { IconButton } from "@material-tailwind/react";
 import {
@@ -9,15 +9,44 @@ import {
 } from "@/widgets/layout";
 import routes from "@/routes";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
+import AuthService from "@/services/auth.service";
+import { useEffect, useState } from "react";
+import EventBus from "@/common/EventBus";
+import routesLogin from "@/routesLogin";
 
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
+  const [currentUser, setCurrentUser] = useState(undefined);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
 
+    if (user) {
+      setCurrentUser(user);
+    }
+    if (localStorage.getItem("user") == null) {
+      navigate("/auth/sign-in");
+    }
+
+    EventBus.on("logout", () => {
+      logOut();
+    });
+
+    return () => {
+      EventBus.remove("logout");
+    };
+  }, []);
+  const logOut = () => {
+    AuthService.logout();
+    setShowModeratorBoard(false);
+    setShowAdminBoard(false);
+    setCurrentUser(undefined);
+  };
   return (
     <div className="min-h-screen bg-blue-gray-50/50">
       <Sidenav
-        routes={routes}
+        routes={currentUser ? routesLogin : routes}
         brandImg={
           sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"
         }
@@ -38,8 +67,14 @@ export function Dashboard() {
           {routes.map(
             ({ layout, pages }) =>
               layout === "dashboard" &&
-              pages.map(({ path, element }) => (
-                <Route exact path={path} element={element} />
+              pages.map(({ path, element, name }) => (
+                <>
+                  {name == "product" || name == "dashboard" ? (
+                    <Route exact path={path} element={element} />
+                  ) : (
+                    ""
+                  )}
+                </>
               ))
           )}
         </Routes>

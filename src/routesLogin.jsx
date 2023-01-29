@@ -15,7 +15,7 @@ import AuthService from "./services/auth.service";
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
-export const routes = [
+export const routesLogin = [
   {
     layout: "dashboard",
     pages: [
@@ -25,10 +25,40 @@ export const routes = [
         path: "/home",
         element: <Home />,
       },
+      // {
+      //   icon: <UserCircleIcon {...icon} />,
+      //   name: "profile",
+      //   path: "/profile",
+      //   element: <Profile />,
+      // },
+      // {
+      //   icon: <TableCellsIcon {...icon} />,
+      //   name: "tables",
+      //   path: "/tables",
+      //   element: <Tables />,
+      // },
+      // {
+      //   icon: <BellIcon {...icon} />,
+      //   name: "notifactions",
+      //   path: "/notifactions",
+      //   element: <Notifications />,
+      // },
       {
         icon: <TableCellsIcon {...icon} />,
         name: "product",
         path: "/product",
+        element: <Product />,
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
+        name: "pembelian",
+        path: "/buy",
+        element: <Product />,
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
+        name: "transaksi",
+        path: "/transactions",
         element: <Product />,
       },
     ],
@@ -37,18 +67,6 @@ export const routes = [
     title: "auth pages",
     layout: "auth",
     pages: [
-      {
-        icon: <ArrowRightOnRectangleIcon {...icon} />,
-        name: "masuk",
-        path: "/sign-in",
-        element: <SignIn />,
-      },
-      {
-        icon: <UserPlusIcon {...icon} />,
-        name: "daftar",
-        path: "/sign-up",
-        element: <SignUp />,
-      },
       {
         icon: <ArrowLeftOnRectangleIcon {...icon} />,
         name: "keluar",
@@ -59,4 +77,4 @@ export const routes = [
   },
 ];
 
-export default routes;
+export default routesLogin;
